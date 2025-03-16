@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+src/main/resources/szopapka-firebase.json
+src/main/resources/szopapka-firebase.json
