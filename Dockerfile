@@ -7,6 +7,7 @@ USER app
 WORKDIR /app
 
 COPY target/*.jar app.jar
+COPY src/main/resources/szopapka-firebase.json /app/szopapka-firebase.json
 
 EXPOSE 8080
 
