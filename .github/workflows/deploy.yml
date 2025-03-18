@@ -27,6 +27,6 @@ jobs:
           docker build -t szopapka.azurecr.io/szopapka-backend:latest .
           docker push szopapka.azurecr.io/szopapka-backend:latest
 
-      # - name: Restart App Service (opcjonalnie)
-      #   run: |
-      #     az webapp restart --name <YOUR_APP_SERVICE_NAME> --resource-group <YOUR_RESOURCE_GROUP>
+      - name: Restart App Service
+        run: |
+          az webapp restart --name szopapka-backend --resource-group szopapka
