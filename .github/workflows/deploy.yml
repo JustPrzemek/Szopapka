@@ -1,0 +1,32 @@
+name: Deploy Backend to Azure Container Registry
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Logowanie do Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Logowanie do ACR
+        run: |
+          az acr login --name szopapka
+
+      - name: Budowanie i push obrazu Dockera
+        run: |
+          docker build -t szopapka.azurecr.io/szopapka-backend:latest .
+          docker push szopapka.azurecr.io/szopapka-backend:latest
+
+      # - name: Restart App Service (opcjonalnie)
+      #   run: |
+      #     az webapp restart --name <YOUR_APP_SERVICE_NAME> --resource-group <YOUR_RESOURCE_GROUP>

@@ -1,14 +1,16 @@
-FROM openjdk:21-jdk
+FROM maven:3.9.6-eclipse-temurin-21 AS build
+WORKDIR /home/app
 
-RUN groupadd -r app && useradd -r -g app app
+COPY pom.xml .
+COPY src ./src
 
-USER app
+RUN mvn clean package -DskipTests
 
+FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
-COPY target/*.jar app.jar
-COPY src/main/resources/szopapka-firebase.json /app/szopapka-firebase.json
+COPY --from=build /home/app/target/*.jar /app/app.jar
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
