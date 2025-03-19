@@ -1,16 +1,15 @@
-FROM maven:3.9.6-eclipse-temurin-21 AS build
-WORKDIR /home/app
+FROM maven:3.8.6-openjdk-21 AS builder
+WORKDIR /app
 
-COPY pom.xml .
-COPY src ./src
+COPY . .
 
 RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:21-jdk
+FROM openjdk:17-jdk-slim
 WORKDIR /app
 
-COPY --from=build /home/app/target/*.jar /app/app.jar
+COPY --from=builder /app/target/*.jar app.jar
 
-EXPOSE 8080
+ENV SPRING_PROFILES_ACTIVE=prod
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+CMD ["java", "-jar", "app.jar"]
