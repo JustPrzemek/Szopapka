@@ -27,6 +27,9 @@ jobs:
           docker build -t szopapka.azurecr.io/szopapka-backend:latest .
           docker push szopapka.azurecr.io/szopapka-backend:latest
 
-      - name: Restart App Service
+      - name: Deploy do ACA
         run: |
-          az webapp restart --name szopapka-backend --resource-group szopapka
+          az containerapp update \
+            --name szopapka-backend \
+            --resource-group szopapka \
+            --image szopapka.azurecr.io/szopapka-backend:latest
