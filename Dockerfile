@@ -1,17 +1,14 @@
-FROM openjdk:21-jdk-slim AS builder
+
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
-
-RUN apt-get update && apt-get install -y maven
-
 COPY . .
+RUN ./mvnw clean package -DskipTests
 
-RUN mvn clean package -DskipTests
 
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jre
 WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 
-COPY --from=builder /app/target/*.jar app.jar
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/firebase.json
 
-ENV SPRING_PROFILES_ACTIVE=prod
-
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
