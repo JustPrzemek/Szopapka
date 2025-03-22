@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Logowanie do Azure
         uses: azure/login@v1
@@ -20,16 +20,16 @@ jobs:
 
       - name: Logowanie do ACR
         run: |
-          az acr login --name szopapka
+          az acr login --name szopapkaacr
 
       - name: Budowanie i push obrazu Dockera
         run: |
-          docker build -t szopapka.azurecr.io/szopapka-backend:latest .
-          docker push szopapka.azurecr.io/szopapka-backend:latest
+          docker build -t szopapkaacr.azurecr.io/backend:latest .
+          docker push szopapkaacr.azurecr.io/backend:latest
 
       - name: Deploy do ACA
         run: |
           az containerapp update \
-            --name szopapka-backend \
-            --resource-group szopapka \
-            --image szopapka.azurecr.io/szopapka-backend:latest
+            --name backend \
+            --resource-group szopapka-rg \
+            --image szopapkaacr.azurecr.io/backend:latest
