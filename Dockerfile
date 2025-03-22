@@ -1,16 +1,17 @@
-FROM maven:3.9.6-eclipse-temurin-21 AS build
-WORKDIR /home/app
+FROM openjdk:21-jdk-slim AS builder
+WORKDIR /app
 
-COPY pom.xml .
-COPY src ./src
+RUN apt-get update && apt-get install -y maven
+
+COPY . .
 
 RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:21-jdk
+FROM openjdk:21-jdk-slim
 WORKDIR /app
 
-COPY --from=build /home/app/target/*.jar /app/app.jar
+COPY --from=builder /app/target/*.jar app.jar
 
-EXPOSE 8080
+ENV SPRING_PROFILES_ACTIVE=prod
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+CMD ["java", "-jar", "app.jar"]
