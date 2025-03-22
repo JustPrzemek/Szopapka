@@ -20,16 +20,16 @@ jobs:
 
       - name: Logowanie do ACR
         run: |
-          az acr login --name szopapka-acr
+          az acr login --name szopapkaacr
 
       - name: Budowanie i push obrazu Dockera
         run: |
-          docker build -t szopapka-acr.azurecr.io/backend:latest .
-          docker push szopapka-acr.azurecr.io/backend:latest
+          docker build -t szopapkaacr.azurecr.io/backend:latest .
+          docker push szopapkaacr.azurecr.io/backend:latest
 
       - name: Deploy do ACA
         run: |
           az containerapp update \
             --name backend \
             --resource-group szopapka-rg \
-            --image szopapka-acr.azurecr.io/backend:latest
+            --image szopapkaacr.azurecr.io/backend:latest
