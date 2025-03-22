@@ -13,4 +13,5 @@ COPY --from=build /app/target/*.jar app.jar
 
 ENV GOOGLE_APPLICATION_CREDENTIALS=/app/firebase.json
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD echo $FIREBASE_SECRET | base64 --decode > /app/firebase.json && \
+    java -jar app.jar
