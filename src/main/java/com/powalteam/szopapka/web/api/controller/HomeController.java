@@ -1,4 +1,4 @@
-package com.powalteam.szopapka.controller;
+package com.powalteam.szopapka.web.api.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -7,10 +7,7 @@ CREATE TABLE family
 CREATE TABLE users
 (
   id SERIAL PRIMARY KEY,
-  login VARCHAR(255),
-  password TEXT NOT NULL,
-  name VARCHAR(255),
-  surname VARCHAR(255)
+  mail VARCHAR(255)
 );
 
 CREATE TABLE status
