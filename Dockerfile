@@ -1,14 +1,17 @@
-FROM openjdk:21-jdk
 
-RUN groupadd -r app && useradd -r -g app app
-
-USER app
-
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
+COPY . .
 
-COPY target/*.jar app.jar
-COPY src/main/resources/szopapka-firebase.json /app/szopapka-firebase.json
+RUN chmod +x ./mvnw
+RUN ./mvnw clean package -DskipTests
 
-EXPOSE 8080
 
-CMD ["java", "-jar", "app.jar"]
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/firebase.json
+
+CMD echo $FIREBASE_SECRET | base64 --decode > /app/firebase.json && \
+    java -jar app.jar
