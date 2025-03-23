@@ -24,7 +24,7 @@ public class FirebaseConfig {
 
     @Bean
     public FirebaseApp initializeFirebase() throws IOException {
-        String firebaseCredentialPath = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
+        String firebaseCredentialPath = System.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON");
         InputStream serviceAccount;
 
         if (firebaseCredentialPath != null) {
