@@ -1,16 +1,17 @@
-FROM maven:3.8.6-openjdk-21 AS builder
 
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
-
 COPY . .
 
-RUN mvn clean package -DskipTests
+RUN chmod +x ./mvnw
+RUN ./mvnw clean package -DskipTests
 
-FROM openjdk:21-jdk-slim
+
+FROM eclipse-temurin:21-jre
 WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 
-COPY --from=builder /app/target/*.jar app.jar
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/firebase.json
 
-ENV SPRING_PROFILES_ACTIVE=prod
-
-CMD ["java", "-jar", "app.jar"]
+CMD echo $FIREBASE_SECRET | base64 --decode > /app/firebase.json && \
+    java -jar app.jar
