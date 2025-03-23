@@ -28,7 +28,7 @@ public class FirebaseConfig {
         InputStream serviceAccount;
 
         if (firebaseCredentialPath != null) {
-            serviceAccount = new FileInputStream(firebaseCredentialPath);
+            serviceAccount = new ByteArrayInputStream(firebaseCredentialJson.getBytes(StandardCharsets.UTF_8));
         } else {
             Resource resource = resourceLoader.getResource("classpath:szopapka-firebase.json");
             serviceAccount = resource.getInputStream();
