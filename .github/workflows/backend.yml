@@ -1,4 +1,4 @@
-name: Build and Deploy Backend
+name: Deploy Backend to Azure App Service
 
 on:
   push:
@@ -6,38 +6,36 @@ on:
       - main
 
 jobs:
-  build-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '21'
           distribution: 'temurin'
+          java-version: '21'
 
-      - name: Save Firebase JSON
-        run: |
-          echo "${{ secrets.FIREBASE_JSON }}" > firebase.json
-
-      - name: Login to Azure
-        uses: azure/login@v1
+      - name: Cache Maven packages
+        uses: actions/cache@v3
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          
-      - name: Upload Firebase JSON to Azure
-        uses: azure/cli@v1
-        with:
-          inlineScript: |
-            az webapp deploy --resource-group szopapka-rg --name szopapka-backend --src-path firebase.json --target-path /home/site/wwwroot/firebase.json --type static
+          path: ~/.m2
+          key: maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: maven-
 
-      - name: Build backend
+      - name: Build Spring Boot application
         run: mvn clean package -DskipTests
 
       - name: Deploy to Azure App Service
-        uses: azure/cli@v1
+        uses: azure/webapps-deploy@v3
         with:
-          inlineScript: |
-            az webapp deployment source config-zip --resource-group szopapka-rg --name szopapka-backend --src target/szopapka-0.0.1-SNAPSHOT.jar
+          app-name: 'szopapka-backend'
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: 'target/*.jar'
+
+      - name: Upload Firebase JSON to App Service
+        run: echo "${{ secrets.FIREBASE_JSON }}" > /home/site/wwwroot/szopapka-firebase.json
+
