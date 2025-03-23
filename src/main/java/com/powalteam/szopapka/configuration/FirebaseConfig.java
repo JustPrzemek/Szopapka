@@ -24,20 +24,20 @@ public class FirebaseConfig {
 
     @Bean
     public FirebaseApp initializeFirebase() throws IOException {
-        String firebaseCredentialPath = System.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON");
+        String firebaseCredentialJson = System.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON");
         InputStream serviceAccount;
-
-        if (firebaseCredentialPath != null) {
+    
+        if (firebaseCredentialJson != null) {
             serviceAccount = new ByteArrayInputStream(firebaseCredentialJson.getBytes(StandardCharsets.UTF_8));
         } else {
             Resource resource = resourceLoader.getResource("classpath:szopapka-firebase.json");
             serviceAccount = resource.getInputStream();
         }
-
+    
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .build();
-
+    
         if (FirebaseApp.getApps().isEmpty()) {
             return FirebaseApp.initializeApp(options);
         } else {
