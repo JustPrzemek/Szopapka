@@ -1,4 +1,4 @@
-name: Deploy Backend to Azure Container Registry
+name: Build and Deploy Backend
 
 on:
   push:
@@ -6,30 +6,34 @@ on:
       - main
 
 jobs:
-  build-and-push:
+  build-deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Logowanie do Azure
-        uses: azure/login@v1
+      - name: Set up JDK
+        uses: actions/setup-java@v3
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          java-version: '21'
+          distribution: 'temurin'
 
-      - name: Logowanie do ACR
+      - name: Save Firebase JSON
         run: |
-          az acr login --name szopapkaacr
+          echo "${{ secrets.FIREBASE_JSON }}" > firebase.json
 
-      - name: Budowanie i push obrazu Dockera
-        run: |
-          docker build -t szopapkaacr.azurecr.io/backend:latest .
-          docker push szopapkaacr.azurecr.io/backend:latest
+      - name: Upload Firebase JSON to Azure
+        uses: azure/cli@v1
+        with:
+          inlineScript: |
+            az webapp deploy --resource-group szopapka-rg --name szopapka-backend --src-path firebase.json --target-path /home/site/wwwroot/firebase.json --type static
 
-      - name: Deploy do ACA
-        run: |
-          az containerapp update \
-            --name backend \
-            --resource-group szopapka-rg \
-            --image szopapkaacr.azurecr.io/backend:latest
+      - name: Build backend
+        run: mvn clean package -DskipTests
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'szopapka-backend'
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
