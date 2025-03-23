@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 
 import java.io.FileInputStream;
 import java.io.IOException;
