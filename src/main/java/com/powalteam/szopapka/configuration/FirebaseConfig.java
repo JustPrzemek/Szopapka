@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,20 +26,20 @@ public class FirebaseConfig {
 
     @Bean
     public FirebaseApp initializeFirebase() throws IOException {
-        String firebaseCredentialPath = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
+        String firebaseCredentialJson = System.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON");
         InputStream serviceAccount;
-
-        if (firebaseCredentialPath != null) {
-            serviceAccount = new FileInputStream(firebaseCredentialPath);
+    
+        if (firebaseCredentialJson != null) {
+            serviceAccount = new ByteArrayInputStream(firebaseCredentialJson.getBytes(StandardCharsets.UTF_8));
         } else {
             Resource resource = resourceLoader.getResource("classpath:szopapka-firebase.json");
             serviceAccount = resource.getInputStream();
         }
-
+    
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .build();
-
+    
         if (FirebaseApp.getApps().isEmpty()) {
             return FirebaseApp.initializeApp(options);
         } else {
