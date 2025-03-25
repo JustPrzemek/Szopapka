@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Tag(name = "Family", description = "Endpoint for create family")
 public interface CreateFamilyController {
 
-        @PostMapping("/createFamily")
+    @PostMapping(value = "/createFamily", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
         @ResponseStatus(HttpStatus.OK)
         @Operation(
                 summary = "Add new family",
@@ -33,21 +34,8 @@ public interface CreateFamilyController {
                                 mediaType = "application/json",
                                 schema = @Schema(implementation = User.class)
                         )
-                ),
-                @ApiResponse(
-                        responseCode = "400",
-                        description = "Bad Request",
-                        content = @Content(
-                                mediaType = "application/json"
-                        )
-                ),
-                @ApiResponse(
-                        responseCode = "500",
-                        description = "Internal Server Error",
-                        content = @Content(
-                                mediaType = "application/json"
-                        )
                 )
+
         })
         Family createFamily(@RequestBody FamilyDTO familyDTO);
     }

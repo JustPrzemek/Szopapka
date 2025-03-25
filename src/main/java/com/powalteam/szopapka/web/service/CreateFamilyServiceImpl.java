@@ -9,8 +9,13 @@ import com.powalteam.szopapka.web.repository.FamilyRepository;
 import com.powalteam.szopapka.web.repository.UserInFamilyRepository;
 import com.powalteam.szopapka.web.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,10 +32,26 @@ public class CreateFamilyServiceImpl implements CreateFamilyService {
     @Autowired
     private UserInFamilyRepository userInFamilyRepository;
 
-    public Family createFamily(FamilyDTO familyDTO) {
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
+    public Family createFamily(FamilyDTO familyDTO) {
         Family newFamily = new Family();
         newFamily.setFamilyName(familyDTO.getFamilyName());
+
+        MultipartFile imageFile = familyDTO.getImage();
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
+                Path filePath = Paths.get(uploadDir, fileName);
+                Files.createDirectories(filePath.getParent());
+                Files.write(filePath, imageFile.getBytes());
+                newFamily.setImage(fileName);
+            } catch (Exception e) {
+                throw new RuntimeException("Błąd zapisu pliku", e);
+            }
+        }
+
         return familyRepository.save(newFamily);
     }
 

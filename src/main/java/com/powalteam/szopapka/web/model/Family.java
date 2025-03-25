@@ -14,9 +14,12 @@ public class Family {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     @Column(name = "family_name")
     private String familyName;
+
+    @Column(name = "image")
+    private String image;
 
 }
