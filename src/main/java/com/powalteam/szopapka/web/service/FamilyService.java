@@ -1,13 +1,15 @@
 package com.powalteam.szopapka.web.service;
 
 import com.powalteam.szopapka.web.api.dto.FamilyDTO;
+import com.powalteam.szopapka.web.api.dto.FamilyMembersDTO;
 import com.powalteam.szopapka.web.model.Family;
-import com.powalteam.szopapka.web.model.User;
 
 import java.util.List;
 
-public interface CreateFamilyService {
+public interface FamilyService {
     Family createFamily(FamilyDTO familyDTO);
-    List<User> getFamilyMembers(Long familyId);
-    void addUserToFamily(Long familyId, Long userId);
+
+    public List<FamilyMembersDTO> getFamilyWithMembers(
+            );
+
 }
