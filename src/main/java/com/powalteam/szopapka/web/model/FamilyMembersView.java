@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Immutable
-public class FamilyMembers {
+public class FamilyMembersView {
 
     @Id
     @Column(name = "family_name")
@@ -26,4 +26,7 @@ public class FamilyMembers {
 
     @Column(name = "mail")
     private String mail;
+
+    @Column(name = "family_code")
+    private String familyCode;
 }

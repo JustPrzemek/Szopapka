@@ -14,4 +14,6 @@ public class FamilyMembersDTO {
     private String image;
 
     private String mail;
+
+    private String familyCode;
 }

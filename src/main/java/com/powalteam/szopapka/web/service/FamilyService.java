@@ -7,9 +7,8 @@ import com.powalteam.szopapka.web.model.Family;
 import java.util.List;
 
 public interface FamilyService {
-    Family createFamily(FamilyDTO familyDTO);
 
-    public List<FamilyMembersDTO> getFamilyWithMembers(
-            );
+    public Family createFamily(FamilyDTO familyDTO, String userMail);
 
+    List<FamilyMembersDTO> getFamilyWithMembers(String userEmail);
 }
