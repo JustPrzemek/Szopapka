@@ -1,3 +1,5 @@
+ALTER TABLE family ADD COLUMN family_code VARCHAR(5) NOT NULL;
+
 ALTER TABLE shopping DROP COLUMN date;
 
 ALTER TABLE shopping ADD COLUMN quantity INTEGER NOT NULL;
