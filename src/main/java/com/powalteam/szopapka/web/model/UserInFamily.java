@@ -16,10 +16,11 @@ public class UserInFamily {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "id_user", nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "id_user", nullable = false)
+    private User user;
 
-    @Column(name = "id_family", nullable = false)
-    private Long familyId;
-
+    @ManyToOne
+    @JoinColumn(name = "id_family", nullable = false)
+    private Family family;
 }
