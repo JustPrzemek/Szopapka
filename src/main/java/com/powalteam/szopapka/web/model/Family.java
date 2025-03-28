@@ -22,7 +22,4 @@ public class Family {
     @Column(name = "image")
     private String image;
 
-    @Column(name = "family_code")
-    private String familyCode;
-
 }
