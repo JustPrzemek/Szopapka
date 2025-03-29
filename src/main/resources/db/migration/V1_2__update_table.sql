@@ -7,5 +7,3 @@ ALTER TABLE shopping DROP COLUMN id_status;
 DROP TABLE status;
 
 ALTER TABLE shopping ADD COLUMN status VARCHAR(255) NOT NULL CHECK (status IN ('DONE', 'DURING', 'NEW'));
-
-ALTER TABLE family ADD COLUMN family_code VARCHAR(5) NOT NULL;
