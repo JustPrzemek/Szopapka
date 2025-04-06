@@ -1,4 +1,4 @@
-name: Load Test with Auth
+name: Azure Load Testing
 
 on:
   workflow_dispatch:
@@ -10,9 +10,14 @@ jobs:
       FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
       FIREBASE_TEST_EMAIL: ${{ secrets.FIREBASE_TEST_EMAIL }}
       FIREBASE_TEST_PASSWORD: ${{ secrets.FIREBASE_TEST_PASSWORD }}
+      
     steps:
       - uses: actions/checkout@v3
-      - name: Run k6 test
-        uses: grafana/k6-action@v0.3.0
+      
+      - name: Run Azure Load Test
+        uses: azure/load-testing@v1
         with:
-          filename: load-test.js
+          loadTestConfigFile: 'load-test-config.yaml'
+          resourceGroup: 'szopapka-rg'  # Twoja grupa zasobów
+          loadTestResource: 'szopapka-loadtest'    # Nazwa usługi Azure Load Testing
+          token: ${{ secrets.AZURE_CREDENTIALS }} # Service Principal (JSON)
