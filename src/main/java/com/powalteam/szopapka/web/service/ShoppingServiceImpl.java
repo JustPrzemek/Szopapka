@@ -1,17 +1,23 @@
 package com.powalteam.szopapka.web.service;
 
 import com.powalteam.szopapka.web.api.dto.ShoppingDTO;
+import com.powalteam.szopapka.web.api.dto.ShoppingViewDTO;
 import com.powalteam.szopapka.web.api.mapper.ShoppingMapper;
+import com.powalteam.szopapka.web.api.mapper.ShoppingViewMapper;
+import com.powalteam.szopapka.web.model.ShoppingView;
 import com.powalteam.szopapka.web.model.User;
 import com.powalteam.szopapka.web.repository.ShoppingRepository;
+import com.powalteam.szopapka.web.repository.ShoppingViewRepository;
 import com.powalteam.szopapka.web.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.powalteam.szopapka.web.model.Shopping;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +27,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     private final ShoppingRepository shoppingRepository;
 
+    @Autowired
+    private ShoppingViewRepository shoppingViewRepository;
+
     private final ShoppingMapper shoppingMapper;
+
+    private final ShoppingViewMapper shoppingViewMapper;
 
     public ShoppingDTO createShoppingList(ShoppingDTO shoppingDTO) {
         try {
@@ -78,6 +89,14 @@ public class ShoppingServiceImpl implements ShoppingService {
         } catch (Exception e) {
             throw new RuntimeException("Error updating shopping status: " + e.getMessage(), e);
         }
+
+    }
+    @Override
+    public List<ShoppingViewDTO> getShoppingByFamily(Long idFamily) {
+        List<ShoppingView> viewList = shoppingViewRepository.findByIdFamily(idFamily);
+        return viewList.stream()
+                .map(shoppingViewMapper::toShoppingViewDTO)
+                .collect(Collectors.toList());
     }
 
 }

@@ -10,7 +10,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 public class FamilyControllerImpl implements FamilyController {
@@ -29,11 +33,20 @@ public class FamilyControllerImpl implements FamilyController {
 
     }
 
+
     @Override
-    public FamilyMembersDTO getFamilyWithMembers() {
+    public List<FamilyMembersDTO> getFamilyWithMembers(
+            @RequestParam(required = false) String familyName) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String mail = authentication.getName();
-        return familyService.getCompleteFamilyInfo(mail);
+
+        if (familyName != null) {
+            FamilyMembersDTO family = familyService.getCompleteFamilyInfo(mail, familyName);
+            return Collections.singletonList(family);
+        } else {
+            return familyService.getAllFamiliesWithMembers(mail);
+        }
     }
 
     @Override

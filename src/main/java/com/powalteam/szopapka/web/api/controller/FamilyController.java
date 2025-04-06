@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("/api/Family")
 @Tag(name = "Family", description = "Endpoint for create family")
 public interface FamilyController {
@@ -37,6 +39,7 @@ public interface FamilyController {
 
     })
     Family createFamily(@RequestBody FamilyDTO familyDTO);
+
     @GetMapping(value = "/getFamilyWithMembers")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
@@ -57,7 +60,8 @@ public interface FamilyController {
                     description = "Family not found"
             )
     })
-    FamilyMembersDTO getFamilyWithMembers();
+    List<FamilyMembersDTO> getFamilyWithMembers(
+            @RequestParam(required = false) String familyName);
 
     @PostMapping("/join")
     @ResponseStatus(HttpStatus.OK)

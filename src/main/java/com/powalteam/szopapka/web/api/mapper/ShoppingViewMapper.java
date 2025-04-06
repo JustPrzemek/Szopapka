@@ -9,5 +9,5 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ShoppingViewMapper {
     ShoppingViewDTO toDto(ShoppingView shoppingView);
-    List<ShoppingViewDTO> toDtoList(List<ShoppingView> shoppingViews);
+    ShoppingViewDTO toShoppingViewDTO(ShoppingView shoppingView);
 }

@@ -2,6 +2,7 @@ package com.powalteam.szopapka.web.api.controller;
 
 
 import com.powalteam.szopapka.web.api.dto.ShoppingDTO;
+import com.powalteam.szopapka.web.api.dto.ShoppingViewDTO;
 import com.powalteam.szopapka.web.model.Shopping;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/api/shopping")
 @Tag(name = "Shopping", description = "Endpoint for shopping")
@@ -64,5 +67,18 @@ public interface ShoppingController {
             @ApiResponse(responseCode = "404", description = "Shopping item not found")
     })
     ShoppingDTO updateShoppingStatus(@PathVariable Long id, @RequestParam String status);
+
+    @GetMapping("/getByFamily/{idFamily}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Get all shopping lists for a family",
+            description = "Returns all shopping list items for a given family"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ShoppingViewDTO.class)))
+    })
+    List<ShoppingViewDTO> getShoppingByFamily(@PathVariable Long idFamily);
 
 }
