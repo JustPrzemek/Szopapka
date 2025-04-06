@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -101,7 +102,7 @@ public class FamilyServiceImpl implements FamilyService {
             throw new RuntimeException("User not found in any family");
         }
 
-        Long familyId = userFamilies.get(0).getFamilyId();
+        Long familyId = userFamilies.get(1).getFamilyId();
         List<FamilyMembersView> members = familyMembersRepository.findByFamilyId(familyId);
 
         Family family = familyRepository.findById(familyId)
