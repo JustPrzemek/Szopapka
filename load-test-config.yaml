@@ -1,5 +1,5 @@
 version: v1
 testName: Szopapka Backend Load Test
-testPlan: test-script.js
-engineInstances: 1
-description: "Test obciążeniowy API backendu"
+testPlan: load-test.js
+engineInstances: 1 
+description: "Test obciążeniowy API z autentykacją Firebase"
