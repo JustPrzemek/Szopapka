@@ -11,11 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface FamilyMembersRepository extends JpaRepository<FamilyMembersView, Long> {
-
-
     List<FamilyMembersView> findByMail(String mail);
 
     @Query("SELECT fm FROM FamilyMembersView fm WHERE fm.familyId = :familyId")
     List<FamilyMembersView> findByFamilyId(@Param("familyId") Long familyId);
-
 }

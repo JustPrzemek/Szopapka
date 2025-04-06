@@ -1,5 +1,6 @@
 package com.powalteam.szopapka.web.repository;
 
+import com.powalteam.szopapka.web.api.dto.FamilyMembersDTO;
 import com.powalteam.szopapka.web.model.Family;
 import com.powalteam.szopapka.web.model.FamilyMembersView;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,13 +13,10 @@ import java.util.Optional;
 
 @Repository
 public interface FamilyRepository extends JpaRepository<Family, Long> {
-
-    @Query("SELECT fm.mail FROM FamilyMembersView fm " +
-            "WHERE fm.familyCode = :familyCode")
+    @Query("SELECT fm.mail FROM FamilyMembersView fm WHERE fm.familyCode = :familyCode")
     List<String> findMemberEmailsByFamilyCode(@Param("familyCode") String familyCode);
 
     Optional<Family> findByFamilyCode(String familyCode);
 
     boolean existsByFamilyCode(String code);
-
 }
