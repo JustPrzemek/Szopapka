@@ -19,5 +19,4 @@ public class User {
     @Column(name = "mail")
     private String email;
 
-
 }

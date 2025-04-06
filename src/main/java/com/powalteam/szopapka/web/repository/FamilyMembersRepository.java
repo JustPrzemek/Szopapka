@@ -7,12 +7,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FamilyMembersRepository extends JpaRepository<FamilyMembersView, Long> {
-    @Query(value = "SELECT * FROM family_members WHERE mail = :userEmail",
-            nativeQuery = true)
+    List<FamilyMembersView> findByMail(String mail);
 
-    List<FamilyMembersView> findByUserEmail(@Param("userEmail") String userEmail);
-
+    @Query("SELECT fm FROM FamilyMembersView fm WHERE fm.familyId = :familyId")
+    List<FamilyMembersView> findByFamilyId(@Param("familyId") Long familyId);
 }

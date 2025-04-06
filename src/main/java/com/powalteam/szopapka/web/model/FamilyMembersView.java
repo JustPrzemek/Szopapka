@@ -21,6 +21,9 @@ public class FamilyMembersView {
     @Column(name = "family_name")
     private String familyName;
 
+    @Column(name = "family_id")
+    private Long familyId;
+
     @Column(name= "image")
     private String image;
 
@@ -29,4 +32,5 @@ public class FamilyMembersView {
 
     @Column(name = "family_code")
     private String familyCode;
+
 }

@@ -3,6 +3,7 @@ package com.powalteam.szopapka.web.api.controller;
 import com.powalteam.szopapka.web.api.dto.FamilyDTO;
 import com.powalteam.szopapka.web.api.dto.FamilyMembersDTO;
 import com.powalteam.szopapka.web.model.Family;
+import com.powalteam.szopapka.web.model.JoinFamilyRequest;
 import com.powalteam.szopapka.web.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,8 +14,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequestMapping("/api/Family")
 @Tag(name = "Family", description = "Endpoint for create family")
@@ -38,12 +37,11 @@ public interface FamilyController {
 
     })
     Family createFamily(@RequestBody FamilyDTO familyDTO);
-
-    @GetMapping(value = "/getFamily")
+    @GetMapping(value = "/getFamilyWithMembers")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
-            summary = "Get family with members",
-            description = "Get family information including its members"
+            summary = "Get family with all members",
+            description = "Get complete family information including all members"
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -59,5 +57,28 @@ public interface FamilyController {
                     description = "Family not found"
             )
     })
-    public List<FamilyMembersDTO> getFamily();
+    FamilyMembersDTO getFamilyWithMembers();
+
+    @PostMapping("/join")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Join family by code",
+            description = "Allows user to join existing family using family code"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully joined family"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Family not found"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request"
+            )
+    })
+    String joinFamilyByCode(@RequestBody JoinFamilyRequest request) throws Exception;
 }
+

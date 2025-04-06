@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,7 +15,7 @@ public class FamilyMembersDTO {
 
     private String image;
 
-    private String mail;
+    private List<MembersDTO> members;
 
     private String familyCode;
 }
