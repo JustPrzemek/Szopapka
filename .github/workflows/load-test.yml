@@ -18,6 +18,6 @@ jobs:
         uses: azure/load-testing@v1
         with:
           loadTestConfigFile: 'load-test-config.yaml'
-          resourceGroup: 'szopapka-rg'  # Twoja grupa zasobów
-          loadTestResource: 'szopapka-loadtest'    # Nazwa usługi Azure Load Testing
-          token: ${{ secrets.AZURE_CREDENTIALS }} # Service Principal (JSON)
+          resourceGroup: 'szopapka-rg'
+          loadTestResource: 'szopapka-loadtest'
+          token: ${{ secrets.AZURE_LOAD_TEST_TOKEN }}
