@@ -2,13 +2,18 @@ import http from 'k6/http';
 import { check } from 'k6';
 
 export const options = {
-  vus: 5,
-  duration: '30s'
+  scenarios: {
+    constant_load: {
+      executor: 'constant-vus',
+      vus: 10,
+      duration: '5m', 
+    },
+  },
 };
 
-const testEmail = __ENV.FIREBASE_API_KEY;
-const testPassword = __ENV.FIREBASE_TEST_EMAIL;
-const firebaseKey = __ENV.FIREBASE_TEST_PASSWORD;
+const firebaseKey = __ENV.FIREBASE_API_KEY;
+const testEmail = __ENV.FIREBASE_TEST_EMAIL;
+const testPassword = __ENV.FIREBASE_TEST_PASSWORD;
 
 export default function () {
 
@@ -21,19 +26,17 @@ export default function () {
     }),
     { headers: { 'Content-Type': 'application/json' } }
   );
-
+  
   const authToken = loginRes.json().idToken;
-
-
-  const headers = {
-    'Authorization': `Bearer ${authToken}`,
-    'Content-Type': 'application/json'
-  };
-
 
   const res = http.get(
     'https://szopapka-backend.azurewebsites.net/api/Family/getFamilyWithMembers',
-    { headers }
+    {
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json'
+      }
+    }
   );
   check(res, { 'status was 200': (r) => r.status === 200 });
 }
