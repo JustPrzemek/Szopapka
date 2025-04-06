@@ -18,12 +18,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.util.Collections;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -93,19 +94,33 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
-    public FamilyMembersDTO getCompleteFamilyInfo(String userMail) {
+    public FamilyMembersDTO getCompleteFamilyInfo(String userMail, String familyName) {
+
+        User user = userRepository.findByEmail(userMail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         List<FamilyMembersView> userFamilies = familyMembersRepository.findByMail(userMail);
 
-        if (userFamilies.isEmpty()) {
-            throw new RuntimeException("User not found in any family");
-        }
-        
-        FamilyMembersView familyView = userFamilies.get(0);
-        Long familyId = familyView.getFamilyId();
+        Family family;
+        if (familyName != null) {
+            family = familyRepository.findByFamilyName(familyName)
+                    .orElseThrow(() -> new RuntimeException("Family not found"));
 
-        List<FamilyMembersView> members = familyMembersRepository.findByFamilyId(familyId);
-        Family family = familyRepository.findById(familyId)
-                .orElseThrow(() -> new RuntimeException("Family not found for ID: " + familyId));
+            boolean isMember = userFamilies.stream()
+                    .anyMatch(f -> f.getFamilyName().equals(familyName));
+            if (!isMember) {
+                throw new RuntimeException("User is not a member of this family");
+            }
+        }
+        else {
+            if (userFamilies.isEmpty()) {
+                throw new RuntimeException("User not found in any family");
+            }
+            family = familyRepository.findById(userFamilies.get(0).getFamilyId())
+                    .orElseThrow(() -> new RuntimeException("Family not found"));
+        }
+
+        List<FamilyMembersView> members = familyMembersRepository.findByFamilyId(family.getId());
 
         FamilyMembersDTO dto = new FamilyMembersDTO();
         dto.setFamilyName(family.getFamilyName());
@@ -114,6 +129,31 @@ public class FamilyServiceImpl implements FamilyService {
         dto.setMembers(familyMembersMapper.toMemberDtoList(members));
 
         return dto;
+    }
+
+    @Override
+    public List<FamilyMembersDTO> getAllFamiliesWithMembers(String userMail) {
+        User user = userRepository.findByEmail(userMail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<FamilyMembersView> userFamilies = familyMembersRepository.findByMail(userMail);
+
+        return userFamilies.stream()
+                .map(familyView -> {
+                    Family family = familyRepository.findById(familyView.getFamilyId())
+                            .orElseThrow(() -> new RuntimeException("Family not found"));
+
+                    List<FamilyMembersView> members = familyMembersRepository.findByFamilyId(family.getId());
+
+                    FamilyMembersDTO dto = new FamilyMembersDTO();
+                    dto.setFamilyName(family.getFamilyName());
+                    dto.setImage(family.getImage());
+                    dto.setFamilyCode(family.getFamilyCode());
+                    dto.setMembers(familyMembersMapper.toMemberDtoList(members));
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -137,7 +177,6 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
 }
-
 
 
 

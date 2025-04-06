@@ -13,10 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface FamilyRepository extends JpaRepository<Family, Long> {
-    @Query("SELECT fm.mail FROM FamilyMembersView fm WHERE fm.familyCode = :familyCode")
-    List<String> findMemberEmailsByFamilyCode(@Param("familyCode") String familyCode);
-
+    Optional<Family> findByFamilyName(String familyName);
     Optional<Family> findByFamilyCode(String familyCode);
-
-    boolean existsByFamilyCode(String code);
+    boolean existsByFamilyCode(String familyCode);
 }
