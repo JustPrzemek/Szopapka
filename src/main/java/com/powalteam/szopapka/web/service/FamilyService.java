@@ -10,5 +10,7 @@ public interface FamilyService {
 
     public Family createFamily(FamilyDTO familyDTO, String userMail);
 
-    List<FamilyMembersDTO> getFamilyWithMembers(String userEmail);
+    FamilyMembersDTO getCompleteFamilyInfo(String userEmail);
+
+    void joinFamilyByCode(String userEmail, String familyCode) throws Exception;
 }

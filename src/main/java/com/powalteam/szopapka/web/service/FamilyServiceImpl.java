@@ -2,6 +2,7 @@ package com.powalteam.szopapka.web.service;
 
 import com.powalteam.szopapka.web.api.dto.FamilyDTO;
 import com.powalteam.szopapka.web.api.dto.FamilyMembersDTO;
+import com.powalteam.szopapka.web.api.dto.MembersDTO;
 import com.powalteam.szopapka.web.api.mapper.FamilyMembersMapper;
 import com.powalteam.szopapka.web.model.Family;
 
@@ -70,7 +71,7 @@ public class FamilyServiceImpl implements FamilyService {
                 throw new RuntimeException("Error File", e);
             }
         }
-        newFamily.setFamilyCode(generateFamilyCode());
+        newFamily.setFamilyCode(generateUniqueFamilyCode());
 
         Family savedFamily = familyRepository.save(newFamily);
 
@@ -83,16 +84,60 @@ public class FamilyServiceImpl implements FamilyService {
 
 
     }
-    private String generateFamilyCode() {
-        return UUID.randomUUID().toString().substring(0, 5).toUpperCase();
+
+    private String generateUniqueFamilyCode() {
+        String code;
+        do {
+            code = UUID.randomUUID().toString().substring(0, 5).toUpperCase();
+        } while (familyRepository.existsByFamilyCode(code));
+        return code;
     }
 
     @Override
-    public List<FamilyMembersDTO> getFamilyWithMembers(String userEmail) {
-        List<FamilyMembersView> members = familyMembersRepository.findByUserEmail(userEmail);
-        return familyMembersMapper.toDtoList(members);
+    public FamilyMembersDTO getCompleteFamilyInfo(String userMail) {
+        List<FamilyMembersView> userFamilies = familyMembersRepository.findByMail(userMail);
+
+        if (userFamilies.isEmpty()) {
+            throw new RuntimeException("User not found in any family");
+        }
+
+        Long familyId = userFamilies.get(0).getFamilyId();
+        List<FamilyMembersView> members = familyMembersRepository.findByFamilyId(familyId);
+
+        Family family = familyRepository.findById(familyId)
+                .orElseThrow(() -> new RuntimeException("Family not found"));
+
+        FamilyMembersDTO dto = new FamilyMembersDTO();
+        dto.setFamilyName(family.getFamilyName());
+        dto.setImage(family.getImage());
+        dto.setFamilyCode(family.getFamilyCode());
+        dto.setMembers(familyMembersMapper.toMemberDtoList(members));
+
+        return dto;
     }
+
+    @Override
+    public void joinFamilyByCode(String userEmail, String familyCode) throws Exception {
+
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+
+        if (userInFamilyRepository.existsByUserId(user.getId())) {
+            throw new Exception("User already belongs to a family");
+        }
+
+        Family family = familyRepository.findByFamilyCode(familyCode)
+                .orElseThrow(() -> new Exception("Family with code " + familyCode + " not found"));
+
+        UserInFamily userInFamily = new UserInFamily();
+        userInFamily.setUserId(user.getId());
+        userInFamily.setFamilyId(family.getId());
+        userInFamilyRepository.save(userInFamily);
+    }
+
 }
+
 
 
 
