@@ -24,6 +24,9 @@ public class FamilyMembersView {
     @Column(name = "family_id")
     private Long familyId;
 
+    @Column(name = "user_id")
+    private Long userId;
+
     @Column(name= "image")
     private String image;
 
