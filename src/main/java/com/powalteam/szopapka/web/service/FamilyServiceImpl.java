@@ -126,6 +126,7 @@ public class FamilyServiceImpl implements FamilyService {
         dto.setFamilyName(family.getFamilyName());
         dto.setImage(family.getImage());
         dto.setFamilyCode(family.getFamilyCode());
+        dto.setFamilyId(family.getId());
         dto.setMembers(familyMembersMapper.toMemberDtoList(members));
 
         return dto;
@@ -149,6 +150,9 @@ public class FamilyServiceImpl implements FamilyService {
                     dto.setFamilyName(family.getFamilyName());
                     dto.setImage(family.getImage());
                     dto.setFamilyCode(family.getFamilyCode());
+
+                    dto.setFamilyId(familyView.getFamilyId());
+
                     dto.setMembers(familyMembersMapper.toMemberDtoList(members));
 
                     return dto;
