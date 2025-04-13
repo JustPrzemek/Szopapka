@@ -20,7 +20,8 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
       - name: Run tests
-        run: mvn test
+        run: mvn test -Dspring.profiles.active=test
+
 
   deploy:
     needs: test
