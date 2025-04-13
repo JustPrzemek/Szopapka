@@ -1,5 +1,6 @@
 version: v1
 testName: Szopapka-Backend-Load-Test
 testPlan: load-test.js
+testType: k6oss
 engineInstances: 1 
 description: "Test obciążeniowy API z autentykacją Firebase"
