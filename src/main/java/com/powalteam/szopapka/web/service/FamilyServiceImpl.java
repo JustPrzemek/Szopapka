@@ -162,11 +162,6 @@ public class FamilyServiceImpl implements FamilyService {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-
-        if (userInFamilyRepository.existsByUserId(user.getId())) {
-            throw new Exception("User already belongs to a family");
-        }
-
         Family family = familyRepository.findByFamilyCode(familyCode)
                 .orElseThrow(() -> new Exception("Family with code " + familyCode + " not found"));
 
