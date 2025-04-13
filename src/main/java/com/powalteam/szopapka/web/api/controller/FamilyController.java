@@ -85,4 +85,3 @@ public interface FamilyController {
     })
     String joinFamilyByCode(@RequestBody JoinFamilyRequest request) throws Exception;
 }
-
