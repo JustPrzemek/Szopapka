@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
+@Component
 public interface FamilyMembersMapper {
     @Mapping(source = "mail", target = "mail")
     MembersDTO toUserDto(FamilyMembersView view);

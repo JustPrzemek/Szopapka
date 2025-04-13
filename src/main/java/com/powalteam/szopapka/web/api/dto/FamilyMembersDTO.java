@@ -13,6 +13,8 @@ public class FamilyMembersDTO {
 
     private String familyName;
 
+    private Long familyId;
+
     private String image;
 
     private List<MembersDTO> members;
