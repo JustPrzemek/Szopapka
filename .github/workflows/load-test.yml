@@ -10,14 +10,18 @@ jobs:
       FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
       FIREBASE_TEST_EMAIL: ${{ secrets.FIREBASE_TEST_EMAIL }}
       FIREBASE_TEST_PASSWORD: ${{ secrets.FIREBASE_TEST_PASSWORD }}
-      
+    
     steps:
       - uses: actions/checkout@v3
+      
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
       
       - name: Run Azure Load Test
         uses: azure/load-testing@v1
         with:
-          loadTestConfigFile: 'load-test-config.yaml'
+          loadtestConfigFile: 'load-test-config.yaml'
           resourceGroup: 'szopapka-rg'
-          loadTestResource: 'szopapka-loadtest'
-          token: ${{ secrets.AZURE_LOAD_TEST_TOKEN }}
+          loadtestResource: 'szopapka-loadtest'
